@@ -9,7 +9,7 @@ UNIT = (
     r"(?:°\s*[cсfф]|%\s*(?:rh|rн|ов)?|мпа|кпа|па|mpa|kpa|bar|бар|мм|mm|"
     r"мв|мa|ма|в|v|гц|hz|кг|kg|г|g|мс|мл|ml|с|ч)"
 )
-MEASUREMENT = re.compile(rf"({NUMBER})\s*({UNIT})(?![\w])", re.IGNORECASE)
+MEASUREMENT = re.compile(rf"(?:(?<!\w)|(?=[+-]))({NUMBER})\s*({UNIT})(?![\w])", re.IGNORECASE)
 RANGE = re.compile(
     rf"({NUMBER})\s*(?:до|to|[–—…]|\.\.\.|-)\s*({NUMBER})\s*({UNIT})(?![\w])",
     re.IGNORECASE,
@@ -36,6 +36,7 @@ TECHNICAL_TERMS = [
     r"погружать\s+(?:прибор\w*|устройств\w*|корпус\w*)",
 ]
 USE_CASE_TERMS = [r"производств\w*", r"медицин\w*", r"больниц\w*", r"нефтегаз\w*"]
+QUALITY_TERMS = [r"высок\w*\s+точност\w*"]
 
 
 def _canonical_text(text: str) -> str:
@@ -172,6 +173,19 @@ def validate_draft(product: ProductInput, draft: Draft) -> list[str]:
         if re.search(term, text) and not re.search(term, source):
             errors.append("unsupported_technical_claim")
             break
-    if any(re.search(term, text) and not re.search(term, source) for term in USE_CASE_TERMS):
+    if any(re.search(term, text) and not re.search(term, source) for term in QUALITY_TERMS):
+        errors.append("unsupported_quality_claim")
+    # Manufacturer attribution is not evidence of an industrial use case.
+    manufacturer = _normalized(product.manufacturer or "").split()
+    if manufacturer and len(manufacturer[0]) >= 3:
+        attribution = rf"\bпроизводства\s+{re.escape(manufacturer[0])}(?!\w)"
+        use_case_text = re.sub(attribution, "", text)
+        use_case_source = re.sub(attribution, "", source)
+    else:
+        use_case_text, use_case_source = text, source
+    if any(
+        re.search(term, use_case_text) and not re.search(term, use_case_source)
+        for term in USE_CASE_TERMS
+    ):
         errors.append("unsupported_use_case")
     return list(dict.fromkeys(errors))

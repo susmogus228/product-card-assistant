@@ -7,7 +7,7 @@ name = "product-card-assistant"
 version = "0.1.0"
 description = "Source-grounded drafts of B2B product cards using Groq"
 requires-python = ">=3.12"
-dependencies = ["groq==1.7.0", "pydantic==2.14.2", "python-dotenv==1.2.4"]
+dependencies = ["groq==1.7.0", "httpx==0.28.1", "pydantic==2.14.2", "python-dotenv==1.2.4"]
 
 [project.optional-dependencies]
 dev = ["pytest==9.2.0", "ruff==0.17.3"]

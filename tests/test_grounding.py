@@ -1,6 +1,6 @@
 import pytest
 
-from product_card.grounding import validate_draft
+from product_card.grounding import _measurements, validate_draft
 from product_card.models import Draft, ProductInput
 
 
@@ -55,6 +55,15 @@ def test_new_technical_number_rejected(product, draft):
     assert "unsupported_numeric_value" in validate_draft(product, draft)
 
 
+def test_model_suffix_before_russian_preposition_is_not_time_measurement():
+    assert ("1", "с") not in _measurements("testo 905-T1 с погружным зондом")
+    assert ("10", "с") in _measurements("отклик 10 с в воде")
+
+
+def test_model_suffix_with_multiple_digits_is_not_time_measurement():
+    assert _measurements("прибор T12 с датчиком") == set()
+
+
 def test_existing_number_with_wrong_unit_rejected(product, draft):
     draft.commercial = "Питание 350 В."
     assert "unsupported_measurement" in validate_draft(product, draft)
@@ -79,6 +88,17 @@ def test_range_endpoint_unit_is_allowed(product, draft):
 def test_unknown_interface_rejected(product, draft):
     draft.commercial = "Передаёт показания по Bluetooth."
     assert "unsupported_technical_claim" in validate_draft(product, draft)
+
+
+def test_unsupported_high_accuracy_claim_is_rejected(product, draft):
+    draft.seo_description += " Измеряет с высокой точностью."
+    assert "unsupported_quality_claim" in validate_draft(product, draft)
+
+
+def test_explicit_high_accuracy_claim_is_allowed(product, draft):
+    product.description += " Измеряет с высокой точностью."
+    draft.seo_description += " Измеряет с высокой точностью."
+    assert "unsupported_quality_claim" not in validate_draft(product, draft)
 
 
 def test_fabricated_extracted_fact_rejected(product, draft):
@@ -144,6 +164,22 @@ def test_probe_immersion_does_not_allow_instrument_immersion(product, draft):
 
 def test_unstated_production_use_case_is_rejected(product, draft):
     draft.commercial = "Для технического контроля в производстве."
+    assert "unsupported_use_case" in validate_draft(product, draft)
+
+
+def test_manufacturer_attribution_is_not_an_industrial_use_case(product, draft):
+    draft.seo_description += " Прибор производства Testo."
+    assert "unsupported_use_case" not in validate_draft(product, draft)
+
+
+def test_manufacturer_attribution_does_not_mask_industrial_use(product, draft):
+    draft.seo_description += " Прибор производства Testo для работы на производстве."
+    assert "unsupported_use_case" in validate_draft(product, draft)
+
+
+def test_manufacturer_attribution_in_source_does_not_authorize_industrial_use(product, draft):
+    product.description += " Прибор производства Testo."
+    draft.seo_description += " Для работы на производстве."
     assert "unsupported_use_case" in validate_draft(product, draft)
 
 

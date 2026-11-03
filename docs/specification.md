@@ -1,5 +1,9 @@
 # Product card assistant: agreed specification
 
+This document records the initial agreed scope. The current implementation also
+offers Ollama as an alternative provider; see README and docs/verification.md for
+the current configuration, checks and limitations.
+
 Source: employer PDF, sections 1-9, read on 2026-11-03. The PDF has three pages,
 one sample JSON, and no embedded product attachments. The employer's two inputs
 are pending. The user authorized two complete independently sourced demo products

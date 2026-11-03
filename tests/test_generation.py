@@ -50,6 +50,26 @@ def test_invalid_json_response_can_be_corrected(sample_product, valid_draft):
     assert generate_card(sample_product, provider).generation_attempts == 2
 
 
+def test_specific_safe_review_code_reaches_corrective_attempt(sample_product, valid_draft):
+    class ReviewingProvider:
+        model = "test-model"
+
+        def __init__(self):
+            self.seen = []
+
+        def generate(self, product, repair_errors=()):
+            self.seen.append(list(repair_errors))
+            if len(self.seen) == 1:
+                raise ModelOutputError(
+                    "Missing accuracy condition", repair_code="accuracy_condition"
+                )
+            return valid_draft
+
+    provider = ReviewingProvider()
+    assert generate_card(sample_product, provider).generation_attempts == 2
+    assert provider.seen == [[], ["accuracy_condition"]]
+
+
 def test_two_bad_generations_fail_without_returning_a_card(sample_product, valid_draft):
     bad = valid_draft.model_copy(deep=True)
     bad.commercial = "Измеряет до 900 °C."

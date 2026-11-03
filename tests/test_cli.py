@@ -108,3 +108,23 @@ def test_empty_product_does_not_require_api_credentials(tmp_path, monkeypatch, c
     path.write_text("{}", encoding="utf-8")
     assert main([str(path)]) == 4
     assert json.loads(capsys.readouterr().out)["generation_attempts"] == 0
+
+
+def test_cli_uses_ollama_when_selected(input_file, monkeypatch, tmp_path, valid_draft):
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setenv("PRODUCT_CARD_PROVIDER", "ollama")
+    monkeypatch.setenv("OLLAMA_BASE_URL", "http://127.0.0.1:11434")
+    monkeypatch.setenv("OLLAMA_MODEL", "test-model")
+    monkeypatch.setattr(
+        "product_card.ollama_provider.OllamaProvider.generate", lambda *a, **k: valid_draft
+    )
+    assert main([str(input_file), "--output", "card.json"]) == 0
+    data = json.loads((tmp_path / "card.json").read_text(encoding="utf-8"))
+    assert data["model"] == "test-model"
+
+
+def test_cli_rejects_unknown_provider(input_file, monkeypatch, tmp_path, capsys):
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setenv("PRODUCT_CARD_PROVIDER", "unknown")
+    assert main([str(input_file)]) == 2
+    assert "PRODUCT_CARD_PROVIDER" in capsys.readouterr().err

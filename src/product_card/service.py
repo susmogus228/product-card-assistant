@@ -128,14 +128,21 @@ def generate_card(product: ProductInput, provider: Provider) -> ProductCard:
     for attempt in (1, 2):
         try:
             draft = provider.generate(product, repair_errors=errors)
-        except ModelOutputError:
-            errors = ["invalid_response_structure"]
+        except ModelOutputError as exc:
+            errors = [exc.repair_code or "invalid_response_structure"]
             continue
         errors = validate_draft(product, draft)
         if errors:
             continue
         conflicts = verified_conflicts(product, draft)
-        return _card(product, provider, draft, attempt, conflicts)
+        return _card(
+            product,
+            provider,
+            draft,
+            attempt,
+            conflicts,
+            warnings=getattr(provider, "warnings", ()),
+        )
     raise ModelOutputError(
         "Карточка не прошла проверки после двух попыток. "
         "Проверьте полноту и непротиворечивость исходных данных. Коды: " + ", ".join(errors)

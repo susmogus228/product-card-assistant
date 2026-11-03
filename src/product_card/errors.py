@@ -14,3 +14,7 @@ class ProviderError(AppError):
 
 class ModelOutputError(AppError):
     """A retryable output-format error, distinct from network/API failures."""
+
+    def __init__(self, message: str, *, repair_code: str | None = None):
+        super().__init__(message)
+        self.repair_code = repair_code

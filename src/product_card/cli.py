@@ -4,11 +4,13 @@ import os
 import sys
 from pathlib import Path
 
+import httpx
 from dotenv import load_dotenv
 from groq import Groq
 
 from product_card.errors import AppError, InputError
 from product_card.models import MAX_INPUT_BYTES, parse_product
+from product_card.ollama_provider import OllamaProvider
 from product_card.provider import GroqProvider
 from product_card.render import render_markdown
 from product_card.service import generate_card
@@ -41,7 +43,7 @@ def main(argv: list[str] | None = None) -> int:
     for stream in (sys.stdout, sys.stderr):
         if hasattr(stream, "reconfigure"):
             stream.reconfigure(encoding="utf-8")
-    parser = argparse.ArgumentParser(description="Черновик B2B-карточки товара через Groq.")
+    parser = argparse.ArgumentParser(description="Черновик B2B-карточки товара через LLM API.")
     parser.add_argument("input", help="Путь к UTF-8 JSON одного товара")
     parser.add_argument("--format", choices=("json", "markdown", "both"), default="json")
     parser.add_argument("--output", help="Файл вывода; для both префикс без расширения")
@@ -56,20 +58,31 @@ def main(argv: list[str] | None = None) -> int:
         if any(target.exists() for target in targets):
             raise InputError("Файл результата уже существует. Укажите другое имя для сохранения.")
         load_dotenv(Path.cwd() / ".env", override=False)
-        key = os.environ.get("GROQ_API_KEY", "").strip()
-        model = os.environ.get("GROQ_MODEL", "openai/gpt-oss-120b").strip()
-        if not model:
-            raise InputError("GROQ_MODEL не должен быть пустым.")
-        if key:
-            with Groq(
-                api_key=key,
-                base_url="https://api.groq.com",
-                timeout=30.0,
-                max_retries=1,
-            ) as client:
-                card = generate_card(product, GroqProvider(client, model))
+        selected = os.environ.get("PRODUCT_CARD_PROVIDER", "groq").strip().lower()
+        if selected == "ollama":
+            base_url = os.environ.get("OLLAMA_BASE_URL", "http://127.0.0.1:11434").strip()
+            model = os.environ.get("OLLAMA_MODEL", "qwen3-coder:30b").strip()
+            if not model:
+                raise InputError("OLLAMA_MODEL не должен быть пустым.")
+            with httpx.Client(timeout=240.0, trust_env=False) as client:
+                card = generate_card(product, OllamaProvider(client, base_url, model))
+        elif selected == "groq":
+            key = os.environ.get("GROQ_API_KEY", "").strip()
+            model = os.environ.get("GROQ_MODEL", "openai/gpt-oss-120b").strip()
+            if not model:
+                raise InputError("GROQ_MODEL не должен быть пустым.")
+            if key:
+                with Groq(
+                    api_key=key,
+                    base_url="https://api.groq.com",
+                    timeout=30.0,
+                    max_retries=1,
+                ) as client:
+                    card = generate_card(product, GroqProvider(client, model))
+            else:
+                card = generate_card(product, GroqProvider(None, model))
         else:
-            card = generate_card(product, GroqProvider(None, model))
+            raise InputError("PRODUCT_CARD_PROVIDER должен быть groq или ollama.")
         json_text = (
             json.dumps(card.model_dump(), ensure_ascii=False, indent=2, allow_nan=False) + "\n"
         )
