@@ -1,0 +1,32 @@
+{
+  "status": "needs_data",
+  "product_name": "Тест противоречивых данных, не реальный паспорт",
+  "manufacturer": "Демонстрационный ввод",
+  "seo_title": null,
+  "seo_description": null,
+  "characteristics": [
+    {
+      "name": "масса",
+      "value": "требует уточнения",
+      "source": "specs.масса / description"
+    }
+  ],
+  "search_queries": [],
+  "commercial": null,
+  "missing_fields": [
+    "specs.масса: противоречие с description"
+  ],
+  "warnings": [
+    "Черновик: перед публикацией сверьте смысл утверждений с исходными данными.",
+    "Данных недостаточно или они противоречивы; SEO-карточка не сформирована."
+  ],
+  "evidence": {},
+  "validation": {
+    "title_chars": 0,
+    "description_chars": 0,
+    "query_count": 0,
+    "requirements_passed": false
+  },
+  "model": "openai/gpt-oss-120b",
+  "generation_attempts": 1
+}

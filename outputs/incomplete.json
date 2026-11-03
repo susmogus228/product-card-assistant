@@ -1,0 +1,40 @@
+{
+  "status": "needs_data",
+  "product_name": "Манометр показывающий DM 02",
+  "manufacturer": "данных нет",
+  "seo_title": null,
+  "seo_description": null,
+  "characteristics": [
+    {
+      "name": "диапазон измерений",
+      "value": "данных нет",
+      "source": "specs.диапазон измерений"
+    },
+    {
+      "name": "класс точности",
+      "value": "данных нет",
+      "source": "specs.класс точности"
+    }
+  ],
+  "search_queries": [],
+  "commercial": null,
+  "missing_fields": [
+    "manufacturer",
+    "description",
+    "specs.диапазон измерений",
+    "specs.класс точности"
+  ],
+  "warnings": [
+    "Черновик: перед публикацией сверьте смысл утверждений с исходными данными.",
+    "Данных недостаточно или они противоречивы; SEO-карточка не сформирована."
+  ],
+  "evidence": {},
+  "validation": {
+    "title_chars": 0,
+    "description_chars": 0,
+    "query_count": 0,
+    "requirements_passed": false
+  },
+  "model": null,
+  "generation_attempts": 0
+}

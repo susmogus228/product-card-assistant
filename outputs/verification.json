@@ -1,0 +1,105 @@
+{
+  "checked_on": "2026-11-03",
+  "python": "3.12.14",
+  "platform": "Windows",
+  "automated_tests": {
+    "passed": 83,
+    "external_api_calls": false,
+    "clean_venv_passed": true
+  },
+  "lint": "passed",
+  "format": "passed",
+  "live_examples": [
+    {
+      "product": "testo-905-t1",
+      "status": "draft",
+      "title_chars": 67,
+      "description_chars": 854,
+      "queries": 5,
+      "original_specs": 17,
+      "all_original_values_unchanged": true,
+      "generation_attempts": 1,
+      "input_sha256": "4fcefe58413855fb1a61f117c3db27b5c3ccf1e60787e34806861a180ef09847",
+      "output_sha256": "613d8c39c9113952098d49978f939a93a3acaead1117adac2b8852d32f6c8bc1"
+    },
+    {
+      "product": "testo-608-h1",
+      "status": "draft",
+      "title_chars": 63,
+      "description_chars": 988,
+      "queries": 4,
+      "original_specs": 21,
+      "all_original_values_unchanged": true,
+      "generation_attempts": 1,
+      "input_sha256": "212c02f11c619725cce21fcf12c947a15db064772273330dc436aa29b6e002af",
+      "output_sha256": "af250cc881663ba92b76746994e55f0ee02dc99e4d6f547721dc7731d58c1f0b"
+    }
+  ],
+  "negative_cli_examples": [
+    {
+      "example": "malformed",
+      "exit_code": 2,
+      "status": null,
+      "message": "Ошибка: Некорректный JSON: проверьте синтаксис и повторяющиеся ключи.",
+      "api_eligible": false
+    },
+    {
+      "example": "wrong-types",
+      "exit_code": 2,
+      "status": null,
+      "message": "Ошибка: Неверная структура: ожидается объект с name, manufacturer, specs, description; текстовые значения должны быть строками или null, specs должен быть объектом. Неизвестные поля, пустые имена характеристик и слишком длинные значения запрещены.",
+      "api_eligible": false
+    },
+    {
+      "example": "duplicate-keys",
+      "exit_code": 2,
+      "status": null,
+      "message": "Ошибка: Некорректный JSON: проверьте синтаксис и повторяющиеся ключи.",
+      "api_eligible": false
+    },
+    {
+      "example": "incomplete",
+      "exit_code": 4,
+      "status": "needs_data",
+      "message": "",
+      "api_eligible": false
+    },
+    {
+      "example": "prompt-injection",
+      "exit_code": 4,
+      "status": "needs_data",
+      "message": "",
+      "api_eligible": false
+    },
+    {
+      "example": "conflicting",
+      "exit_code": 4,
+      "message": "",
+      "api_eligible": true,
+      "status": "needs_data",
+      "missing_fields": [
+        "specs.масса: противоречие с description"
+      ],
+      "generation_attempts": 1
+    }
+  ],
+  "limitations": [
+    "Employer inputs pending; current products are approved demos.",
+    "Remote Git publication not performed.",
+    "Lexical guards do not prove semantic entailment."
+  ],
+  "review": {
+    "initial_profile": "unavailable_no_verdict",
+    "fallback_code_review": "pass",
+    "final_examples_review": "pass"
+  },
+  "observed_live_rate_limit_handling": "HTTP 429 observed during earlier live checks; safe exit 3 and no output file.",
+  "packaging": {
+    "fresh_extracted_source_tests": 83,
+    "fresh_extracted_lint": "passed",
+    "fresh_extracted_format": "passed",
+    "work_placeholder": "present",
+    "input_hash_line_endings": "LF via .gitattributes",
+    "candidate_archive_sha256": "79093e3a35a047cab7d07810e4848cb820f255617a48d6f9def8172bb0b97b48"
+  }
+}
