@@ -1,10 +1,16 @@
 # Черновики B2B-карточек измерительных приборов
 
+> **Повторная сверка выявила неполноту в исходных примерах.** Исправленные входы и
+> новые результаты сохранены отдельно: [905-T1](outputs/testo-905-t1-reviewed.md) и
+> [608-H1](outputs/testo-608-h1-reviewed.md). Старые результаты оставлены для истории.
+> Каждый новый черновик требует ручной проверки. [Подробности](docs/review-2026-11-03.md).
+
 Локальная Python-утилита принимает JSON товара, обращается к Groq и сохраняет
 черновик карточки в JSON и Markdown. Контент-менеджер получает SEO-заголовок,
 описание, таблицу характеристик, поисковые запросы и блок для менеджера.
 
-Два товара в `examples/products/` подобраны по официальным данным Testo.
+Два товара в `examples/products/` подобраны по официальным данным Testo; файлы
+с суффиксом `-reviewed` содержат исправленные условия измерений.
 Работодатель пока не предоставил свои исходные товары. Эти демонстрационные
 примеры нужно заменить, когда появятся данные работодателя.
 
@@ -36,8 +42,8 @@ if (!(Test-Path -LiteralPath '.env')) { Copy-Item -LiteralPath '.env.example' -D
 Один запрос к модели, два формата результата:
 
 ```powershell
-.\.venv\Scripts\python.exe -m product_card examples/products/testo-905-t1.json --format both --output outputs/my-905
-.\.venv\Scripts\python.exe -m product_card examples/products/testo-608-h1.json --format both --output outputs/my-608
+.\.venv\Scripts\python.exe -m product_card examples/products/testo-905-t1-reviewed.json --format both --output outputs/my-905
+.\.venv\Scripts\python.exe -m product_card examples/products/testo-608-h1-reviewed.json --format both --output outputs/my-608
 ```
 
 Параметр `--output` для `both` задаёт префикс: первая команда создаст
@@ -48,7 +54,7 @@ if (!(Test-Path -LiteralPath '.env')) { Copy-Item -LiteralPath '.env.example' -D
 пишет в stderr. Можно выбрать только Markdown:
 
 ```powershell
-.\.venv\Scripts\python.exe -m product_card examples/products/testo-905-t1.json --format markdown --output outputs/my-card.md
+.\.venv\Scripts\python.exe -m product_card examples/products/testo-905-t1-reviewed.json --format markdown --output outputs/my-card.md
 ```
 
 После установки также доступна команда `.\.venv\Scripts\product-card.exe`.
