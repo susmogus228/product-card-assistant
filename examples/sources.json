@@ -43,6 +43,31 @@
       ],
       "rights_note": "Public manufacturer specifications used as factual input; manufacturer retains rights to original documents and marks. No images reproduced.",
       "input_sha256": "212c02f11c619725cce21fcf12c947a15db064772273330dc436aa29b6e002af"
+    },
+    {
+      "input": "products/fluke-62-max.json",
+      "manufacturer": "Fluke",
+      "product_url": "https://www.fluke.com/en-us/product/temperature-measurement/ir-thermometers/fluke-62-max",
+      "datasheet_url": "https://media.fluke.com/a42b0cde-da13-4ce6-bd64-b10800c21180_original%20file.pdf",
+      "conditions_to_preserve": [
+        "temperature-dependent accuracy at +23 ±2 °C ambient",
+        "response time below 500 ms for 95% of reading",
+        "battery life with laser and backlight on"
+      ],
+      "rights_note": "Factual input paraphrased from manufacturer sources; original images and manuals not reproduced.",
+      "input_sha256": "f37b0da7984772217b79b5c8d85084fbef1c2005cb3eb908a6b6357095c8f106"
+    },
+    {
+      "input": "products/testo-510.json",
+      "manufacturer": "Testo",
+      "product_url": "https://www.testo.com/en-KW/testo-510/p/0560-0510",
+      "conditions_to_preserve": [
+        "pressure accuracy bands and units",
+        "average battery life without display illumination",
+        "Pitot tube optional; inclusion not established in demo input"
+      ],
+      "rights_note": "Factual input paraphrased from manufacturer source; original images and manual not reproduced.",
+      "input_sha256": "f786fccedb6cd5bef67bd76f78e50541f8169a87db96f98398c5062fb9dfa2fd"
     }
   ]
 }
