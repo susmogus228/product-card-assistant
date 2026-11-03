@@ -2,6 +2,19 @@
   "accessed_on": "2026-11-03",
   "example_status": "independently_selected_demo_products_not_employer_inputs",
   "normalization": "Описание пересказано на русском по официальной странице. Единицы и десятичный разделитель переведены в русский формат без пересчёта значений; габариты сохранены в миллиметрах. Исходная точность и условия измерений сохранены. Условие настройки при +25 °C для 905-T1 взято из официального datasheet. Изображения и полные паспорта в пакет не копируются.",
+  "reviewed_sources": [
+    {
+      "input": "products/testo-905-t1-reviewed.json",
+      "input_sha256": "36acfe5dfb16a251afea48a46ab4c8fac998cf07394adc2672a323a33f980485",
+      "additional_datasheet_url": "https://static.testo.com/image/upload/HQ/testo-905-fiche-technique.pdf"
+    },
+    {
+      "input": "products/testo-608-h1-reviewed.json",
+      "input_sha256": "5d2a03c088d07f8b27846d91b048824d35b84db532fbc0f1a11e939281513c91",
+      "additional_datasheet_url": "https://static.testo.com/image/upload/HU/testo-608-adatlap.pdf",
+      "manual_url": "https://static.testo.com/image/upload/Instruction-manual-and-Software/Instruction-manuals/testo-608-instruction-manual.pdf"
+    }
+  ],
   "sources": [
     {
       "input": "products/testo-905-t1.json",

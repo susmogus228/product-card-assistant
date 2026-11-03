@@ -60,6 +60,17 @@ def test_existing_number_with_wrong_unit_rejected(product, draft):
     assert "unsupported_measurement" in validate_draft(product, draft)
 
 
+def test_wrong_battery_count_not_borrowed_from_other_spec(product, draft):
+    product.specs["толщина"] = "2 мм"
+    draft.seo_description += " Питание: 2 батарейки AAA."
+    assert "unsupported_battery_count" in validate_draft(product, draft)
+
+
+def test_equivalent_battery_wording_is_accepted(product, draft):
+    draft.seo_description += " Питание: 3 батарейки AAA."
+    assert "unsupported_battery_count" not in validate_draft(product, draft)
+
+
 def test_range_endpoint_unit_is_allowed(product, draft):
     draft.seo_description += "Измеряет температуру от -50 °C до +350 °C."
     assert validate_draft(product, draft) == []
@@ -73,6 +84,13 @@ def test_unknown_interface_rejected(product, draft):
 def test_fabricated_extracted_fact_rejected(product, draft):
     draft.additional_specs = [
         {"name": "материал", "value": "сталь", "source_quote": "Корпус сталь."}
+    ]
+    assert "unverified_additional_spec" in validate_draft(product, draft)
+
+
+def test_extracted_spec_name_must_be_in_source_quote(product, draft):
+    draft.additional_specs = [
+        {"name": "длина зонда", "value": "80 г", "source_quote": "Масса 80 г."}
     ]
     assert "unverified_additional_spec" in validate_draft(product, draft)
 

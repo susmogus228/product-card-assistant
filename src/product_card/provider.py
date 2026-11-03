@@ -66,7 +66,8 @@ class GroqProvider:
             "commercial_technical_details": "Rewrite commercial as audience and tasks only. "
             "Remove technical measurements, ranges and accuracy claims from commercial.",
             "unverified_additional_spec": "Return additional_specs=[] if uncertain. Values must "
-            "be contiguous literal substrings of exact source quotes, without omitted words.",
+            "be contiguous literal substrings of exact source quotes, without omitted words; "
+            "the spec name must occur in its source quote.",
             "seo_description_length": "seo_description must have 800-1200 characters including "
             "spaces. Target 900-1050 characters using only supplied facts.",
         }

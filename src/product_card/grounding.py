@@ -17,6 +17,7 @@ RANGE = re.compile(
 # Scan numeric components even in identifiers or unrecognised units; signed known
 # measurements are checked separately, so model names cannot bypass the numeric guard.
 NUMBERS = re.compile(r"\d+(?:[.,]\d+)?")
+BATTERY_COUNT = re.compile(r"\b(\d+)\s*(?:(?:батаре\w*|элемент\w*)\s+)?(AAA|AA)\b", re.IGNORECASE)
 TECHNICAL_TERMS = [
     r"bluetooth",
     r"wi[ -]?fi",
@@ -68,6 +69,10 @@ def _unit(unit: str) -> str:
         "°с": "°C",
     }
     return aliases.get(unit, unit)
+
+
+def _battery_pairs(text: str) -> set[tuple[int, str]]:
+    return {(int(number), kind.upper()) for number, kind in BATTERY_COUNT.findall(text)}
 
 
 def _measurements(text: str) -> set[tuple[str, str]]:
@@ -124,7 +129,11 @@ def validate_draft(product: ProductInput, draft: Draft) -> list[str]:
     description = product.description or ""
     known_names = {normalize_spec_name(key): value for key, value in product.specs.items()}
     for spec in draft.additional_specs:
-        if spec.source_quote not in description or spec.value not in spec.source_quote:
+        if (
+            spec.source_quote not in description
+            or spec.value not in spec.source_quote
+            or normalize_spec_name(spec.name) not in normalize_spec_name(spec.source_quote)
+        ):
             errors.append("unverified_additional_spec")
         name = normalize_spec_name(spec.name)
         if name in known_names and known_names[name] is not None:
@@ -157,6 +166,8 @@ def validate_draft(product: ProductInput, draft: Draft) -> list[str]:
         errors.append("unsupported_numeric_value")
     if _measurements(raw_text) - _measurements(raw_source):
         errors.append("unsupported_measurement")
+    if _battery_pairs(raw_text) - _battery_pairs(raw_source):
+        errors.append("unsupported_battery_count")
     for term in TECHNICAL_TERMS:
         if re.search(term, text) and not re.search(term, source):
             errors.append("unsupported_technical_claim")

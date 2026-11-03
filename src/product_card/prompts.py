@@ -16,7 +16,8 @@ GROUNDING
   explicitly stated in description and not already populated in specs. Each value must be a
   verbatim substring of source_quote, which must be a verbatim substring of description.
   A substring is contiguous: do not remove, change or insert words. Do not turn mounting
-  instructions or use cases into extra specs. If an extraction is uncertain, leave it out.
+  instructions or use cases into extra specs. The exact additional spec name must also occur
+  in source_quote. If an extraction is uncertain, leave it out.
 - If description contradicts a populated spec, report conflicts with the exact spec_name,
   description_value and literal source_quote. Do not silently choose either value.
 - Report absent information in missing_fields using Russian labels. Never add a made-up value.
