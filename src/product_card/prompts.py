@@ -54,4 +54,10 @@ Allowed additional spec: {"name":"масса","value":"80 г","source_quote":"М
 Input specs: {"масса":"90 г"}, description: "Масса 80 г.".
 Required conflict: {"spec_name":"масса","description_value":"80 г",
 "source_quote":"Масса 80 г."}. Do not use either mass in SEO copy.
+Input description: "Измерительный щуп допускается погружать; защита корпуса не указана."
+Allowed: погружать щуп. Forbidden: погружать весь прибор; степень защиты неизвестна.
+Input description: "Точность ±0,3 °C при +20 °C; при других температурах не указана."
+Allowed: ±0,3 °C при +20 °C. Forbidden: ±0,3 °C во всём рабочем диапазоне.
+Input description: "Температура измеряется; точка росы вычисляется."
+Allowed: вычисление точки росы. Forbidden: прямое измерение точки росы.
 """
